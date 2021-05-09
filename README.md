@@ -59,7 +59,7 @@ func main() {
         m1 := c.Writer.Header().Get("m1")
         m2 := c.Writer.Header().Get("m2")
         fmt.Println(m1)
-	    fmt.Println(m2)
+	fmt.Println(m2)
         
         fmt.Fprint(c.Writer, "middleware Test") // response "middleware Test"
     })
