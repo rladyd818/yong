@@ -92,18 +92,20 @@ func (rt *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	if handler == nil {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprint(w, "정의되지 않은 요청입니다.")
-		return
-	}
-
 	c.Writer = w
 	c.Request = r
 	for _, mHandler := range middlewares {
 		mHandler(&c)
 	}
-
+	if handler == nil {
+		if r.Method == "OPTIONS" {
+			return
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprint(w, "404 page not found")
+			return
+		}
+	}
 	handler(&c)
 }
 
@@ -121,6 +123,9 @@ func (rt Router) PUT(relativePath string, handler HandlerFunc) {
 }
 func (rt Router) DELETE(relativePath string, handler HandlerFunc) {
 	rt.setHandle(relativePath, http.MethodDelete, handler)
+}
+func (rt Router) OPTIONS(relativePath string, handler HandlerFunc) {
+	rt.setHandle(relativePath, http.MethodOptions, handler)
 }
 
 func resolveAddress(addr []string) string {
