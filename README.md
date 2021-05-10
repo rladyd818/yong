@@ -59,7 +59,7 @@ func main() {
         m1 := c.Writer.Header().Get("m1")
         m2 := c.Writer.Header().Get("m2")
         fmt.Println(m1)
-	fmt.Println(m2)
+	    fmt.Println(m2)
         
         fmt.Fprint(c.Writer, "middleware Test") // response "middleware Test"
     })
@@ -67,8 +67,32 @@ func main() {
 }
 ```
 
-result
+Result:
 ```sh
 Execute middleware
 Execute middleware2
+```
+
+### CORS Policy processing using middleware example
+```go
+func CORSMiddleware() yong.HandlerFunc {
+	return func(c *yong.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Origin, Accept")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000") // Your client origin
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, DELETE, POST, OPTIONS")
+		if c.Request.Method == "OPTIONS" {
+			c.Writer.WriteHeader(204)
+		}
+	}
+}
+
+func main() {
+    r := yong.Default()
+    r.USE("/users", CORSMiddleware()) // The "USE" method defines middleware.
+    r.GET("/users", func(c *yong.Context) {
+        fmt.Fprint(c.Writer, "CORS Policy processing") // response "CORS Policy processing"
+    })
+    r.Run(":8000")
+}
 ```
