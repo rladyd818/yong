@@ -30,7 +30,7 @@ func main() {
 ```
 
 ### Method type list
-GET, POST, PUT, PATCH, DELETE
+GET, POST, PUT, PATCH, DELETE, OPTIONS
 
 ### Using Middleware example
 ```go
@@ -59,7 +59,7 @@ func main() {
         m1 := c.Writer.Header().Get("m1")
         m2 := c.Writer.Header().Get("m2")
         fmt.Println(m1)
-	    fmt.Println(m2)
+	fmt.Println(m2)
         
         fmt.Fprint(c.Writer, "middleware Test") // response "middleware Test"
     })
