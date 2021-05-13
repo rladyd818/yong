@@ -2,6 +2,7 @@ package yong
 
 import (
 	"net/http"
+	"net/url"
 	"sync"
 )
 
@@ -27,4 +28,20 @@ func (c *Context) Get(key string) (value interface{}, exists bool) {
 	value, exists = c.Keys[key]
 	c.mu.RUnlock()
 	return
+}
+
+func (c *Context) SetCookie(name, value string, maxAge int, path, domain string, SameSite http.SameSite, secure, httpOnly bool) {
+	if path == "" {
+		path = "/"
+	}
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     name,
+		Value:    url.QueryEscape(value),
+		MaxAge:   maxAge,
+		Path:     path,
+		Domain:   domain,
+		SameSite: SameSite,
+		Secure:   secure,
+		HttpOnly: httpOnly,
+	})
 }
