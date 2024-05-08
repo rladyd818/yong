@@ -27,11 +27,6 @@ func Default() *Router {
 	return router
 }
 
-type Context struct {
-	Request *http.Request
-	Writer  http.ResponseWriter
-}
-
 type HandlerFunc func(*Context)
 
 type method interface {
